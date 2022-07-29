@@ -1,0 +1,17 @@
+#app{
+    display: flex;
+    flex-direction: column;
+}
+
+#flex-container-1{
+    background-color: antiquewhite;
+}
+
+#flex-container-2{
+    display: flex;
+    background-color: lightcyan;
+}
+
+#flex-container-3{
+    background-color: lightsalmon;
+}
