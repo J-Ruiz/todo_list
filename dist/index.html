@@ -27,64 +27,75 @@
 
                 </div>
 
-                <h3>Projects</h3>
+                
                 <div id="task-side-menu-2">
+                    <h3>Projects</h3>
+                    <div id="projects"></div>
+                    <div id="div-add-project-button">
+                        <p id="trigger-add-project-popup">+ Add Project</p>
+                    </div>
+                </div>
 
+
+                <div id="div-add-task-button">
+                    <p id="trigger-add-task-popup">+ Add Task</p>
                 </div>
 
             </div>
 
             <div id="content">
-
-                <div id= "all-content">
-
+                <div id="window-title-div">
+                    <h1 id="window-title">All Tasks</h1>
                 </div>
 
-                <div id= "today-content">
+                <div id="content-window-div">
+                        <div class = "content-containers" id ="all-content-tasks"></div>
+                        <div class = "content-containers" id ="past-content-tasks"></div>
+                        <div class = "content-containers" id ="today-content-tasks"></div>
+                        <div class = "content-containers" id ="upcoming-content-tasks"></div>
+                   
+    
+                    <div id = "popup-add-task">
 
-                </div>
-
-                <div id= "upcoming-content">
-
-                </div>
-
-
-                <div id = "popup-add-task">
-                    <div id = "task-input">
-                        <label for= "task-title">Title: </label>
-                        <input type="text" name="task-title" id="task-title">
-
-                        <label for= "task-date">Date</label>
-                        <input type="date" name="task-date" id="task-date">
+                        <div id = "task-input">
+                            <label for= "task-title">Title: </label>
+                            <input type="text" name="task-title" id="task-title">
+    
+                            <label for= "task-date">Date</label>
+                            <input type="date" name="task-date" id="task-date">
+                        </div>
+                        
+                        <div id="task-buttons">
+                            <button type="button" id="add-task-to-dom">Add Task</button>
+                            <button type="button" id="cancel-task">Cancel Add Task</button>
+                        </div>
+                        
                     </div>
-                    
-                    <div id="task-buttons">
-                        <button type="button" id="add-task">Add Task</button>
-                        <button type="button" id="cancel-task">Cancel Add Task</button>
-                    </div>
-                    
-                </div>
-
-
-                <div id= "popup-add-project">
-                    <div id = "project-input">
-                        <label for= "project-title">Title: </label>
-                        <input type="text" name="project-title" id="project-title">
-                    </div>
-                    
-                    <div id="project-buttons">
-                        <button type="button" id="add-project">Add Project</button>
-                        <button type="button" id="cancel-project">Cancel Add Project</button>
+    
+    
+                    <div id= "popup-add-project">
+                        <div id = "project-input">
+                            <label for= "project-title">Title: </label>
+                            <input type="text" name="project-title" id="project-title">
+                        </div>
+                        
+                        <div id="project-buttons">
+                            <button type="button" id="add-project-to-dom">Add Project</button>
+                            <button type="button" id="cancel-project">Cancel Add Project</button>
+                        </div>
                     </div>
                 </div>
+                
 
 
           </div>
         </div>
 
-        <div id="flex-container-3">
+       <div id = "flex-container-3">
             <footer>Copyright J-Ruiz</footer>
-        </div>
+       </div>
+        
+       
         
     </div>
     <script src="bundle.js"></script>

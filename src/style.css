@@ -1,17 +1,206 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+
+
+
 #app{
     display: flex;
     flex-direction: column;
+    height: 100vh;
 }
 
 #flex-container-1{
     background-color: antiquewhite;
+    flex-grow: 1;
 }
 
 #flex-container-2{
     display: flex;
     background-color: lightcyan;
+    justify-content: space-between;
+    gap: 1vw;
+    flex-grow: 3;
+}
+
+#sidebar{
+    display: flex;
+    flex-direction: column;
+    padding-left: 5px;
+}
+#task-side-menu-1 {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+}
+
+.side-bar-tabs {
+    text-align: center;
+    background-color: red;
+    border: solid black 2px;
+    padding: 2em;
+}
+
+#task-side-menu-2 {
+    height: 100%;
+}
+
+#task-side-menu-2 h3{
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#div-add-project-button{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#div-add-project-button p {
+    background-color: rgb(5, 173, 165);
+    padding: 20px;
+    text-align: center;
+    border-radius: 30px;
+    width: 70%;
+}
+
+#div-add-task-button{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#div-add-task-button p {
+    background-color: palevioletred;
+    padding: 20px;
+    text-align: center;
+    border-radius: 30px;
+    width: 70%;
+}
+#content{
+    flex: 2;
+    height: 100%;
+}
+
+#window-title {
+    font-size: 50px;
+}
+
+#content-window-div{
+    position: relative;
+    height: 90%;
+}
+
+.content-containers {
+    position: absolute;
+    overflow: scroll;
+    top: 0;
+    left:0;
+    width: 100%;
+    height: 100%;
+}
+
+#all-content-tasks{
+    visibility: visible;
+}
+
+#past-content-tasks{
+    visibility: hidden;
+}
+
+#today-content-tasks{
+    visibility: hidden;
+}
+
+#upcoming-content-tasks{
+    visibility: hidden;
+}
+
+.checkbox-and-title {
+    display: flex;
+}
+
+.created-tasks {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    background-color: bisque;
+    font-size: 20px;
+    width: 90%;
+    padding: 2%;
+}
+
+#popup-add-task {
+    visibility: hidden;
+}
+
+#popup-add-project {
+    visibility: hidden;
 }
 
 #flex-container-3{
+    display: fixed;
     background-color: lightsalmon;
+    flex-grow: .5;
+    width: 100%;
+}
+
+footer {
+    display: flex;
+    height: 100%;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
 }
