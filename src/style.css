@@ -227,10 +227,6 @@ table {
     border-radius: 20px;
 }
 
-input:checked {
-    text-decoration: line-through;
-    background-color: gainsboro;
-}
 
 
 .completed-tasks {
