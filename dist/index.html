@@ -31,15 +31,18 @@
                 <div id="task-side-menu-2">
                     <h3>Projects</h3>
                     <div id="projects"></div>
-                    <div id="div-add-project-button">
+                </div>
+
+                <div id="to-do-list-buttons">
+                    <div id="div-add-project-button" >
                         <p id="trigger-add-project-popup">+ Add Project</p>
                     </div>
+    
+                    <div id="div-add-task-button">
+                        <p id="trigger-add-task-popup">+ Add Task</p>
+                    </div>
                 </div>
-
-
-                <div id="div-add-task-button">
-                    <p id="trigger-add-task-popup">+ Add Task</p>
-                </div>
+               
 
             </div>
 
@@ -49,10 +52,8 @@
                 </div>
 
                 <div id="content-window-div">
-                        <div class = "content-containers" id ="all-content-tasks"></div>
-                        <div class = "content-containers" id ="past-content-tasks"></div>
-                        <div class = "content-containers" id ="today-content-tasks"></div>
-                        <div class = "content-containers" id ="upcoming-content-tasks"></div>
+                        <div class = "content-containers" id ="content-tasks"></div>
+
                    
     
                     <div id = "popup-add-task">
@@ -63,6 +64,11 @@
     
                             <label for= "task-date">Date</label>
                             <input type="date" name="task-date" id="task-date">
+
+                            <label for = "task-project">Project</label>
+                            <select name= "task-project" id="task-project">
+                                <option value="no-project">No project</option>
+                            </select>
                         </div>
                         
                         <div id="task-buttons">

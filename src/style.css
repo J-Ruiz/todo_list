@@ -59,8 +59,13 @@ table {
 }
 
 #flex-container-1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
     background-color: antiquewhite;
     flex-grow: 1;
+    height: 5%;
 }
 
 #flex-container-2{
@@ -80,17 +85,23 @@ table {
     display: flex;
     flex-direction: column;
     padding-bottom: 20px;
+    height: 200px;
 }
 
 .side-bar-tabs {
     text-align: center;
-    background-color: red;
+    background-color: rgb(224, 97, 97);
     border: solid black 2px;
-    padding: 2em;
+    padding: 10px;
+    font-size: 20px;
+}
+
+.side-bar-tabs:hover{
+    background-color: rgb(240, 144, 144);
 }
 
 #task-side-menu-2 {
-    height: 100%;
+    height: 20%;
 }
 
 #task-side-menu-2 h3{
@@ -98,10 +109,32 @@ table {
     font-weight: bold;
 }
 
-#div-add-project-button{
+#projects{
+    height: 150px;
+    border: gray solid 2px;
+    overflow: scroll;
+}
+
+.project-option{
+    font-size: 20px;
+    padding: 5px;
+}
+.project-option:hover{
+    background-color: rgb(243, 183, 208);
+}
+
+#to-do-list-buttons{
     display: flex;
     flex-direction: column;
     height: 100%;
+    justify-content: center;
+}
+
+
+#div-add-project-button{
+    display: flex;
+    flex-direction: column;
+    height: 20%;
     justify-content: center;
     align-items: center;
 }
@@ -114,10 +147,14 @@ table {
     width: 70%;
 }
 
+#div-add-project-button p:hover{
+    background-color: rgb(22, 241, 231);
+}
+
 #div-add-task-button{
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 20%;
     justify-content: center;
     align-items: center;
 }
@@ -128,6 +165,10 @@ table {
     text-align: center;
     border-radius: 30px;
     width: 70%;
+}
+
+#div-add-task-button p:hover {
+    background-color: rgb(243, 155, 206);
 }
 #content{
     flex: 2;
@@ -170,6 +211,38 @@ table {
 
 .checkbox-and-title {
     display: flex;
+    align-items: center;
+}
+
+.date-and-delete{
+    display: flex;
+    width: 30%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-task {
+    background-color: rgb(245, 119, 119);
+    padding: 5%;
+    border-radius: 20px;
+}
+
+input:checked {
+    text-decoration: line-through;
+    background-color: gainsboro;
+}
+
+
+.completed-tasks {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    background-color: gainsboro;
+    text-decoration: line-through;
+    color: gray;
+    font-size: 20px;
+    width: 90%;
+    padding: 2%;
 }
 
 .created-tasks {

@@ -2,17 +2,26 @@ import './style.css';
 import { compareAsc } from 'date-fns'
 
 
+/* 
+    1. delete extra content windows 
+    2. keep one content window
+    3. when you click a new side tab 
+        - change the window-title 
+        - create dom elements based off of passed side tab
+*/
+
 const activeWindowsAndTaskStorage ={
     currentWindow: "all-content-tasks",
     previousWindow: "",
-    tasks: []
+    tasks: [],
+    projectTabs: []
 };
 
-const displayContentWindows = {
-    "all" : "all-content-tasks",
-    "past": "past-content-tasks",
-    "today": "today-content-tasks",
-    "upcoming": "upcoming-content-tasks",
+const controlContentWindows = {
+    "add-task-to-dom": "popup-add-task",
+    "cancel-task":"popup-add-task",
+    "add-project-to-dom":"popup-add-project",
+    "cancel-project":"popup-add-project",
     "trigger-add-task-popup": "popup-add-task",
     "trigger-add-project-popup": "popup-add-project"
 };
@@ -24,10 +33,6 @@ const displayTitles = {
     "upcoming": "Upcoming Tasks",
     "trigger-add-task-popup": "Create A New Task",
     "trigger-add-project-popup": "Create a New Project",
-    "all-content-tasks": "All Tasks",
-    "past-content-tasks": "Past Tasks",
-    "today-content-tasks": "Today's Tasks",
-    "upcoming-content-tasks": "Upcoming Tasks"
 };
 
 
@@ -39,185 +44,67 @@ function displaySideBarTabs(){
     }));
 }
 
-
-function displayTabs(id){
-        document.getElementById("window-title").innerHTML = displayTitles[id]
-        document.getElementById(activeWindowsAndTaskStorage.currentWindow).style.visibility = "hidden";
-        activeWindowsAndTaskStorage.currentWindow = displayContentWindows[id];
-        document.getElementById(activeWindowsAndTaskStorage.currentWindow).style.visibility = "visible";
-        
-        if(activeWindowsAndTaskStorage.currentWindow == "popup-add-task" || 
-           activeWindowsAndTaskStorage.currentWindow == "popup-add-project"){     
-            return;
-        }
-
-        else{
-            clearTasks(activeWindowsAndTaskStorage.currentWindow);
-            displayTasks(filterTasks(activeWindowsAndTaskStorage.tasks), id);
-            return;
-        }
-    
-};
-
-
-function displayAddTaskPopup(){
-    document.getElementById("trigger-add-task-popup").addEventListener("click", (event)=>{
-        displayTabs(event.target.id);
-    })
+function clearTasks(){
+    document.getElementById("content-tasks").innerHTML = "";
+    return;
 }
 
-function displayAddProjectPopup(){
-    document.getElementById("trigger-add-project-popup").addEventListener("click", (event)=>{
-        displayTabs(event.target.id);
-    })
-};
+function hideAllWindows(){
+    document.getElementById("content-tasks").style.visibility = "hidden";
+    document.getElementById("popup-add-task").style.visibility = "hidden";
+    document.getElementById("popup-add-project").style.visibility = "hidden";
+    return;
+}
 
-function submitAddTaskPopup(){
-    document.getElementById("add-task-to-dom").addEventListener("click", ()=>{
-        let storeUserInput = pullTaskUserInput();
-        let createTaskObject = newTaskObject(storeUserInput.title, storeUserInput.date, storeUserInput.status);
-        let filteredTasks = filterTasks(activeWindowsAndTaskStorage.tasks);
-        clearTasks("all-content-tasks")
-        displayTasks(filteredTasks, "all")
-        hideProjectsAndTasks();
-    })
-};
-
-function submitAddProjectPopup(){
-    document.getElementById("add-project-to-dom").addEventListener("click", ()=>{
-        hideProjectsAndTasks();
-        //might want to make a separate function HIDE PROJECTS that immediately opens the new project
-        //allowing user to add new tasks
-    })
-};
-
-
-function hideProjectsAndTasks(){
-        document.getElementById(activeWindowsAndTaskStorage.currentWindow).style.visibility = "hidden";
-        activeWindowsAndTaskStorage.currentWindow = "all-content-tasks";
-        document.getElementById("window-title").innerHTML = displayTitles["all"];
-        document.getElementById(activeWindowsAndTaskStorage.currentWindow).style.visibility = "visible";
-};
-
-
-
-
-
-displaySideBarTabs();
-displayAddTaskPopup();
-submitAddTaskPopup();
-displayAddProjectPopup();
-submitAddProjectPopup();
-
-function newTaskObject(title,date,status){
-    const taskFactory = (title, date, status) => {
-        return {title, date, status}
-    }
-    let newTask= taskFactory(title,date,status);
-
-    activeWindowsAndTaskStorage.tasks= activeWindowsAndTaskStorage.tasks.concat(newTask);
-    
-    return newTask
-
-};
-
-function pullTaskUserInput(){
-    let title = document.getElementById("task-title").value; 
-    let date = document.getElementById("task-date").value;
-    let status = "not done";
-
-    return {title, date, status};
-};
-
-/*
-    1. hit add task
-    2. take me back to all tasks window
-    3. add tasks to all tasks
-    4. if all tasks contains tasks, then we will create filter as we go
-        recreating the dom objects to ensure they are up to date 
-
-*/
-
-function displayTasks(filteredTasks, id){
-    if(id == "all"){
-
-        for(let i = 0; i<filteredTasks.allTasks.length; i++){
-            let domTask = makeTaskDomElement(filteredTasks.allTasks[i]);
-            document.getElementById("all-content-tasks").append(domTask);
-        }
+function displayTabs(id){
+    if(controlContentWindows[id]){  
+        hideAllWindows();
+        document.getElementById("window-title").innerHTML = displayTitles[id]
+        document.getElementById(controlContentWindows[id]).style.visibility = "visible";  
         return;
     }
-
-    else if (id == "past"){
-        for(let i = 0; i<filteredTasks.pastTasks.length; i++){
-            let domTask = makeTaskDomElement(filteredTasks.pastTasks[i]);
-            document.getElementById("past-content-tasks").append(domTask);
-        }
+        document.getElementById("window-title").innerHTML = displayTitles[id]
+        clearTasks();
+        displayTasks(id);
         return;
-    }
+};
 
-    else if(id == "today"){
-        for(let i = 0; i<filteredTasks.todaysTasks.length; i++){
-            let domTask = makeTaskDomElement(filteredTasks.todaysTasks[i]);
-            document.getElementById("today-content-tasks").append(domTask);
+function displayTasks(id){
+
+    for(let i = 0; i<activeWindowsAndTaskStorage.tasks.length; i++){
+        let designation = compareDates(activeWindowsAndTaskStorage.tasks[i].date);
+        let label = addSidetabLabelToTask(designation);
+        activeWindowsAndTaskStorage.tasks[i].label = label;   
+    }
+        
+    let regularTabs = id == "all" || id == "past" || id == "today" || id == "upcoming";
+
+    if(regularTabs){
+        for(let i = 0; i<activeWindowsAndTaskStorage.tasks.length; i++){
+            if(id == activeWindowsAndTaskStorage.tasks[i].label || id=="all"){ 
+                let element = makeTaskDomElement(activeWindowsAndTaskStorage.tasks[i], i, id);
+                document.getElementById("content-tasks").append(element);
+             }
         }
         return;
      }
 
-    else if(id == "upcoming"){
-        for(let i = 0; i<filteredTasks.upcomingTasks.length; i++){
-            let domTask = makeTaskDomElement(filteredTasks.upcomingTasks[i]);
-            document.getElementById("upcoming-content-tasks").append(domTask);
+    else {
+        for(let i = 0; i<activeWindowsAndTaskStorage.tasks.length; i++){
+            if(id == activeWindowsAndTaskStorage.tasks[i].project){
+                let element = makeTaskDomElement(activeWindowsAndTaskStorage.tasks[i], i, id);
+                document.getElementById("content-tasks").append(element);
+            }
         }
         return;
+        
     }
-    else{
-        return;
-    }
-}
+};
+        
 
-function makeTaskDomElement(task){
-    
-
-    let newTask = document.createElement("div");
-        newTask.setAttribute("class", "created-tasks");
-
-        let checkboxAndTitle = document.createElement("div");
-            checkboxAndTitle.setAttribute("class", "checkbox-and-title")
-            
-        let checkbox = document.createElement("input")
-            checkbox.setAttribute("type", "checkbox")
-            //checkBox.addEventListener("click", finishTask)
-
-        let title = document.createElement("div");
-            title.innerHTML = task.title;
-
-        checkboxAndTitle.append(checkbox, title)
-
-        let date = document.createElement("div");
-            date.innerHTML = task.date;
-
-        let status = document.createElement("div");
-            status.innerHTML = task.status;
-
-        newTask.append(checkboxAndTitle, date)
-
-    return newTask;
-
-}
-
-function filterTasks(tasks){
-    let allTasks = tasks;
-    let pastTasks =  tasks.filter(task => compareDates(task.date) == -1); 
-    let todaysTasks = tasks.filter(task => compareDates(task.date) == 0); 
-    let upcomingTasks = tasks.filter(task => compareDates(task.date) == 1); 
-
-    return {allTasks, pastTasks, todaysTasks, upcomingTasks}
-}
 
 
 function compareDates(userDate){
-
         let userYear = userDate.slice(0,4);
         let userMonth = userDate.slice(5,7);
         let userDay = userDate.slice(8);
@@ -234,14 +121,227 @@ function compareDates(userDate){
     let designation = compareAsc(userDateCopy, todaysDateCopy);
 
     return designation;
-
 };
 
 
-function clearTasks(id){
-    document.getElementById(id).innerHTML = "";
+function addSidetabLabelToTask(designation){
+    if(designation == -1){
+        return "past";
+    }
+    else if(designation == 0){
+        return "today";
+    }
+    else if(designation == 1){
+        return "upcoming";
+    }
+    else {
+        return "all";
+    }
+};
+function deleteCurrentTask(index){
+    let beforeTask = activeWindowsAndTaskStorage.tasks.slice(0, index);
+    let afterTask = activeWindowsAndTaskStorage.tasks.slice(index+1, activeWindowsAndTaskStorage.tasks.length);
+    let newArray = beforeTask.concat(afterTask);
+    activeWindowsAndTaskStorage.tasks = newArray;
+    return;
+};
+
+function makeTaskDomElement(task, i, currentWindow){
+
+    let newTask = document.createElement("div");
+        newTask.setAttribute("class", activeWindowsAndTaskStorage.tasks[i].status=="done"?"completed-tasks":"created-tasks");
+        newTask.setAttribute("id", "new-task-" + i)
+
+    let checkStatus = "";
+        if(newTask.classList.value == "completed-tasks"){
+            checkStatus == "true";
+        } else{checkStatus== "false"}
+
+    let checkboxAndTitle = document.createElement("div");
+        checkboxAndTitle.setAttribute("class", "checkbox-and-title")
+            
+    let checkbox = document.createElement("input")
+        checkbox.setAttribute("type", "checkbox")
+
+    if(activeWindowsAndTaskStorage.tasks[i].status == "done"){
+        checkbox.setAttribute("checked", true);
+    }
+        checkbox.addEventListener("click", (event)=>{
+            styleParentDivForCheckbox(event.target.checked, i)
+        })
+            
+    let title = document.createElement("div");
+        title.innerHTML = task.title;
+
+    let dateAndDelete = document.createElement("div");
+        dateAndDelete.setAttribute("class", "date-and-delete");
+
+    let date = document.createElement("div");
+        date.innerHTML = task.date;
+
+    let deleteTask = document.createElement("div");
+        deleteTask.innerHTML = "Delete";
+        deleteTask.setAttribute("class", "delete-task");
+        deleteTask.addEventListener("click", ()=>{
+            //if deleteTask is clicked
+                //delete this tasks from the tasks in activeWindowsAndStorage
+                deleteCurrentTask(i);
+                clearTasks();
+                displayTasks(currentWindow);
+        })
+        
+
+    checkboxAndTitle.append(checkbox, title);
+    dateAndDelete.append(date, deleteTask);
+    newTask.append(checkboxAndTitle, dateAndDelete);
+
+    return newTask;
+
+}
+
+
+function displayAddTaskPopup(){
+    document.getElementById("trigger-add-task-popup").addEventListener("click", (event)=>{
+        displayTabs(event.target.id);
+    })
+};
+
+function displayAddProjectPopup(){
+    document.getElementById("trigger-add-project-popup").addEventListener("click", (event)=>{
+        displayTabs(event.target.id);
+    })
+};
+
+function resetUserInput(window){
+    if(window == "popup-add-task"){
+        document.getElementById("task-title").value = "";
+        document.getElementById("task-date").value = "";
+        return;
+    }
+    else if(window == "popup-add-project"){
+        document.getElementById("project-title").value = "";    
+        return;
+    }
+    else{
+        return;
+    }
+}
+
+function cancelAddTask(){
+    document.getElementById("cancel-task").addEventListener("click", () => {
+        clearTasks();
+        resetUserInput("popup-add-task");
+        hideAllWindows();
+        displayAllTasks();
+    })
+}
+
+
+function submitAddTaskPopup(){
+    document.getElementById("add-task-to-dom").addEventListener("click", ()=>{
+        let createTaskObject = newTaskObject();
+        activeWindowsAndTaskStorage.tasks= activeWindowsAndTaskStorage.tasks.concat(createTaskObject);
+
+        clearTasks()
+        resetUserInput("popup-add-task");
+        hideAllWindows();
+        displayAllTasks();
+    })
+};
+
+function submitAddProjectPopup(){
+    document.getElementById("add-project-to-dom").addEventListener("click", ()=>{
+        createNewProjectTab(document.getElementById("project-title").value);
+        clearTasks();
+        hideAllWindows();
+        resetUserInput("popup-add-project")
+        displayAllTasks();
+    })
+};
+
+function cancelProject(){
+    document.getElementById("cancel-project").addEventListener("click", ()=>{
+        clearTasks();
+        hideAllWindows();
+        resetUserInput("popup-add-project")
+        displayAllTasks();
+    })
+}
+
+function displayAllTasks(){
+    document.getElementById("window-title").innerHTML = displayTitles["all"];
+    document.getElementById("content-tasks").style.visibility = "visible";
+    displayTasks("all")
     return;
 }
+
+function createNewProjectTab(title){
+    activeWindowsAndTaskStorage.projectTabs = activeWindowsAndTaskStorage.projectTabs.concat(title)
+    
+    let newProject = document.createElement("div");
+        newProject.innerHTML = title;
+        newProject.setAttribute("class", "project-option");
+        newProject.addEventListener("click", ()=>{
+            document.getElementById("window-title").innerHTML = title;
+            clearTasks();
+            displayTasks(title);
+        })
+        document.getElementById("projects").append(newProject);
+
+    let newOption = document.createElement("option");
+        newOption.value = title;
+        newOption.innerHTML = title;
+    
+        document.getElementById("task-project").append(newOption);
+
+    return;
+};
+
+
+displaySideBarTabs();
+displayAddTaskPopup();
+submitAddTaskPopup();
+displayAddProjectPopup();
+submitAddProjectPopup();
+cancelAddTask();
+cancelProject();
+
+function newTaskObject(){
+    const taskFactory = (title, date, status, project) => {
+        return {title, date, status, project}
+    }
+
+    let userInput = pullTaskUserInput();
+    let newTask = taskFactory(userInput.title,userInput.date,userInput.status, userInput.project);
+    
+    return newTask
+
+};
+
+function pullTaskUserInput(){
+    let title = document.getElementById("task-title").value; 
+    let date = document.getElementById("task-date").value;
+    let status = "not done";
+    let project = document.getElementById("task-project").value;
+    return {title, date, status, project};
+};
+
+function styleParentDivForCheckbox(event, i){
+    if(event){
+        let task = document.getElementById("new-task-"+i);
+        task.classList.remove("created-tasks");
+        task.classList.add("completed-tasks");
+        activeWindowsAndTaskStorage.tasks[i].status = "done";
+
+    }
+
+    else if (!event){
+        let task = document.getElementById("new-task-"+i);
+        task.classList.remove("completed-tasks");
+        task.classList.add("created-tasks");
+        activeWindowsAndTaskStorage.tasks[i].status = "not done"
+    }
+};
 
 
 
